@@ -11,8 +11,9 @@ public:
 	TranslatedNode* words;
 
 };
-DictionaryItem::DictionaryItem(char* word) : words(nullptr){
-	strcpy(key, word);
+DictionaryItem::DictionaryItem(char* word) {
+	key = word;
+	words = nullptr;
 	
 }
 DictionaryItem::~DictionaryItem(){
