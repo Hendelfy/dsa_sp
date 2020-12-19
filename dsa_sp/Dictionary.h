@@ -1,6 +1,7 @@
 #include "DictionaryItem.h"
 #include <iostream>
 #include "StrHelpers.h"
+constexpr auto BASESIZE = 1000;
 class Dictionary
 {
 public:
@@ -16,7 +17,7 @@ public:
 	friend std::ostream& operator<<(std::ostream& os, const Dictionary& dict);
 private:
 	DictionaryItem** dictionary;
-	int size = 1000;
+	int size = 4;
 	int count;
 	unsigned long Hash(char*);
 	void Resize();
@@ -64,7 +65,7 @@ void Dictionary::AddCzechWord(char* key) {
 	char* czechWord = MakeACopy(key);
 	dictionary[position] = new DictionaryItem(czechWord);
 	count++;
-	if ((double)count / size > 0.75)
+	if ((double)count / size >= 0.75)
 		Resize();
 }
 bool Dictionary::isKeyInDictionary(char* key) {
@@ -100,17 +101,23 @@ void Dictionary::Resize() {
 	size = size * 2;
 	auto newDictionary = new DictionaryItem * [size];
 	int position;
-	for (int i = 0, k = 0; i < size && k < count; i++)
+	for (int i = 0; i < size; i++)
+	{
+		newDictionary[i] = nullptr;
+	}
+	for (int i = 0; i < size / 2; i++)
 	{
 		if (dictionary[i] != nullptr) {
 			position = GetPosition(dictionary[i]->key);
 			newDictionary[position] = dictionary[i];
-			k++;
 		}
 		else {
 			delete dictionary[i];
 		}
+		dictionary[i] = nullptr;
 	}
+
+	delete[] dictionary;
 	dictionary = newDictionary;
 }
 
