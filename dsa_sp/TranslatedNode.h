@@ -12,4 +12,5 @@ TranslatedNode::TranslatedNode(char *word) {
 }
 TranslatedNode::~TranslatedNode() {
 	delete[] word;
+	word = nullptr;
 }
