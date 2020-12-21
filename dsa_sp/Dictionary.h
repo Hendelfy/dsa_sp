@@ -13,12 +13,11 @@ public:
 	void AddTranslation(char*, char*);
 	void RemoveTranslation(char*);
 	bool isKeyInDictionary(char*);
-	friend std::istream& operator>>(std::istream& is, Dictionary& dict);
 	friend std::ostream& operator<<(std::ostream& os, const Dictionary& dict);
-private:
 	DictionaryItem** dictionary;
-	int size = 4;
 	int count;
+private:
+	int size = BASESIZE;
 	unsigned long Hash(char*);
 	void Resize();
 	int GetPosition(char*);
@@ -121,10 +120,6 @@ void Dictionary::Resize() {
 	dictionary = newDictionary;
 }
 
-std::istream& operator>>(std::istream& is, Dictionary& dict)
-{
-	return is;
-}
 
 std::ostream& operator<<(std::ostream& os, const Dictionary& dict)
 {

@@ -1,8 +1,10 @@
 #include "TranslatedNode.h"
 #include <sstream>
+#include "StrHelpers.h"
 class DictionaryItem
 {
 public:
+	DictionaryItem();
 	DictionaryItem(char*);
 	~DictionaryItem();
 //private:
@@ -16,6 +18,12 @@ DictionaryItem::DictionaryItem(char* word) {
 	key = word;
 	words = nullptr;
 	
+}
+
+DictionaryItem::DictionaryItem() {
+	key = nullptr;
+	words = nullptr;
+
 }
 DictionaryItem::~DictionaryItem(){
 	delete[] key;
@@ -57,4 +65,3 @@ std::ostream& operator<<(std::ostream& os, const DictionaryItem& di)
 	os << '\n';
 	return os;
 }
-
