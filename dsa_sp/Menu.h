@@ -101,7 +101,7 @@ void Menu::ReadFile(char* file)
 {
 	std::ifstream In(file);
 	if (!In.is_open()) {
-		std::cout << "File doent' exist" << std::endl;
+		std::cout << "File doesn't exist" << std::endl;
 		return;
 	}
 	In.exceptions(std::ifstream::failbit | std::ifstream::badbit);
@@ -165,7 +165,10 @@ void Menu::MenuSelection()
 	{
 		system("CLS");
 		std::cout << "1 - Add czech word\n2 - Add translation\n3 - Delete word from dictionary\n4 - Translate word\n5 - Show full dictionary\n6 - Save to file\n7 - Load from file\nQ - Exit\n\n";
-		switch (c = _getch())
+		
+		c = _getch();
+		system("CLS");
+		switch (c)
 		{
 		case '1':
 			AddCzechWord();
@@ -202,6 +205,7 @@ void Menu::SaveToFile()
 	std::cin >> buf;
 	WriteToFile(buf);
 	delete[] buf;
+	std::cin.clear();
 }
 
 void Menu::LoadFromFile()
@@ -211,4 +215,5 @@ void Menu::LoadFromFile()
 	std::cin >> buf;
 	ReadFile(buf);
 	delete[] buf;
+	std::cin.clear();
 }

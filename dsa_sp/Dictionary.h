@@ -74,19 +74,26 @@ bool Dictionary::isKeyInDictionary(char* key) {
 
 void Dictionary::PrintTranslatedWords(char* key) {
 	auto words = dictionary[GetPosition(key)];
-	if (words != nullptr)
+	if (words != nullptr) {
+		std::cout << "--------------------------" << std::endl;
 		std::cout << *words;
+		std::cout << "--------------------------" << std::endl;
+	}
 	else
 		std::cout << "No translation for word " << key << std::endl;
 }
 
 void Dictionary::AddTranslation(char* key, char* word) {
 	int position = GetPosition(key);
-	dictionary[position]->AddWord(MakeACopy(word));
+	dictionary[position]->AddWord(MakeACopy(word));	
 
 }
 void Dictionary::PrintDictionary() {
-	std::cout << *this << std::endl << "There is " << count << " elements in dictionary" << std::endl;
+	std::cout << "--------------------------" << std::endl;
+	std::cout << *this << std::endl;
+	std::cout << "--------------------------" << std::endl;
+	std::cout<< "There is " << count << " elements in dictionary" << std::endl;
+	std::cout << "--------------------------" << std::endl;
 };
 
 void Dictionary::RemoveTranslation(char* key) {
