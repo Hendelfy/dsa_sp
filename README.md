@@ -1,9 +1,10 @@
-3. Slovník
-Napište program realizující slovník, ve kterém českému slovu (bez diakritiky) odpovídá jedno nebo
-několik anglických slov. Počáteční obsah slovníku bude dán textovým souborem. Program pak
-umožňuje slovník doplňovat, opravovat a v něm hledat.
-Operace:
-- najít anglické překlady k zadanému slovu
-- zrušit záznam pro zadané slovo
-- vložit nový překlad nebo i nové slovo k překladu
-- vypsat slovník
+Dictionary
+
+Write a program that implements a dictionary in which the Czech word (without diacritics) corresponds to one or
+a few English words. The initial contents of the dictionary will be given by a text file. Package of programs
+allows you to add, correct, and search the dictionary.
+Operation:
+- find English translations for a given word
+- delete word translation
+- add new translate or word to translate
+- print dictionary
