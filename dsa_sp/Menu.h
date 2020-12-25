@@ -94,7 +94,7 @@ void Menu::AddTranslation()
 
 void Menu::PrintAll()
 {
-	dictionary->PrintDictionary();
+	dictionary->PrintSortedDictionary();
 }
 
 void Menu::ReadFile(char* file)
@@ -106,7 +106,7 @@ void Menu::ReadFile(char* file)
 	}
 	In.exceptions(std::ifstream::failbit | std::ifstream::badbit);
 	char* buf = new char[80];
-	char* word = new char[20];
+	char* word = new char[80];
 	bool nextWord;
 	while (In)
 	{
@@ -116,6 +116,7 @@ void Menu::ReadFile(char* file)
 			if (!dictionary->isKeyInDictionary(buf))
 				dictionary->AddCzechWord(buf);
 			else {
+				std::cout << buf<<'\n';
 				In.ignore(100, '\n');
 				continue;
 			}
