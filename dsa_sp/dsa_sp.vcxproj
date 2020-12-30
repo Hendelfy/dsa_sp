@@ -145,7 +145,6 @@
     <ClInclude Include="Dictionary.h" />
     <ClInclude Include="DictionaryItem.h" />
     <ClInclude Include="Menu.h" />
-    <ClInclude Include="StrHelpers.h" />
     <ClInclude Include="TranslatedNode.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

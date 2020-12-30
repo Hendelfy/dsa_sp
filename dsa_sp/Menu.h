@@ -1,6 +1,7 @@
 #pragma once
 #include "Dictionary.h"
 #include <conio.h>
+
 #include <fstream>
 class Menu
 {
@@ -9,15 +10,15 @@ private:
 public:
 	Menu();
 
-	Menu(char*);
+	Menu(std::string);
 	~Menu();
 	void FindTranslation();
 	void DeleteWord();
 	void AddCzechWord();
 	void AddTranslation();
 	void PrintAll();
-	void ReadFile(char*);
-	void WriteToFile(char*);
+	void ReadFile(std::string);
+	void WriteToFile(std::string);
 	void MenuSelection();
 	void SaveToFile();
 	void LoadFromFile();
@@ -25,7 +26,7 @@ public:
 
 Menu::Menu() : dictionary(new Dictionary) {}
 
-Menu::Menu(char* fileName) : Menu()
+Menu::Menu(std::string fileName) : Menu()
 {
 	ReadFile(fileName);
 }
@@ -33,63 +34,58 @@ Menu::Menu(char* fileName) : Menu()
 Menu::~Menu() { delete dictionary; }
 
 void Menu::FindTranslation() {
-
-	char* buf = new char[80];
+	
+	std::string buf;
 	std::cout << "Write word you want to see: ";
 	std::cin >> buf;
-	if (dictionary->isKeyInDictionary(buf))
+	if (dictionary->isWordInDictionary(buf))
 		dictionary->PrintTranslatedWords(buf);
 	else
 		std::cout << "No word \"" << buf << "\" in dictionary" << std::endl;
-	delete[] buf;
 }
 
 void Menu::DeleteWord() {
-	char* buf = new char[80];
+	std::string buf;
 	std::cout << "Write word you want to delete: ";
 	std::cin >> buf;
-	if (dictionary->isKeyInDictionary(buf)) {
+	if (dictionary->isWordInDictionary(buf)) {
 		dictionary->RemoveTranslation(buf);
 		std::cout << "Removed successfuly" << std::endl;
 	}
 	else
 		std::cout << "No word \"" << buf << "\" in dictionary" << std::endl;
-	delete[] buf;
 }
 
 void Menu::AddCzechWord()
 {
-	char* buf = new char[80];
+	std::string buf;
 	std::cout << "Write word you want to add: ";
 	std::cin >> buf;
 	std::cout << "Word \"" << buf << "\"";
-	if (dictionary->isKeyInDictionary(buf))
+	if (dictionary->isWordInDictionary(buf))
 		std::cout << " already in dictionary!" << std::endl;
 	else {
 		dictionary->AddCzechWord(buf);
 		std::cout << " successfuly added" << std::endl;
 	}
-	delete[] buf;
 }
 
 void Menu::AddTranslation()
 {
-	char* buf = new char[80];
+	std::string buf;
 	std::cout << "Write word you want to translate: ";
 	std::cin >> buf;
-	if (dictionary->isKeyInDictionary(buf)) {
-		char* word = new char[80];
+	if (dictionary->isWordInDictionary(buf)) {
+		std::string word;
 		std::cout << "Write a translation for word \"" << buf << "\": ";
 		std::cin >> word;
 		dictionary->AddTranslation(buf, word);
 		std::cout << "Successfuly added" << std::endl;
-		delete[] word;
 	}
 	else {
 		std::cout << "No word \"" << buf << "\" in dictionary" << std::endl;
 		std::cout << "Try again" << std::endl;
 	}
-	delete[] buf;
 }
 
 void Menu::PrintAll()
@@ -97,7 +93,7 @@ void Menu::PrintAll()
 	dictionary->PrintSortedDictionary();
 }
 
-void Menu::ReadFile(char* file)
+void Menu::ReadFile(std::string file)
 {
 	std::ifstream In(file);
 	if (!In.is_open()) {
@@ -105,18 +101,18 @@ void Menu::ReadFile(char* file)
 		return;
 	}
 	In.exceptions(std::ifstream::failbit | std::ifstream::badbit);
-	char* buf = new char[80];
-	char* word = new char[80];
+	std::string buf ;
+	std::string word;
 	bool nextWord;
 	while (In)
 	{
 		try
 		{
 			In >> buf;
-			if (!dictionary->isKeyInDictionary(buf))
+			if (!dictionary->isWordInDictionary(buf))
 				dictionary->AddCzechWord(buf);
 			else {
-				std::cout << buf<<'\n';
+				std::cout << buf<<" already was in dictionary\n";
 				In.ignore(100, '\n');
 				continue;
 			}
@@ -148,12 +144,10 @@ void Menu::ReadFile(char* file)
 			}
 		}
 	}
-	delete[] word;
-	delete[] buf;
 	In.close();
 }
 
-void Menu::WriteToFile(char* file) {
+void Menu::WriteToFile(std::string file) {
 	std::ofstream Out(file);
 	Out << *dictionary;
 	Out.close();
@@ -202,19 +196,17 @@ void Menu::MenuSelection()
 void Menu::SaveToFile()
 {
 	std::cout << "Write file name to save: ";
-	char* buf = new char[80];
+	std::string buf;
 	std::cin >> buf;
 	WriteToFile(buf);
-	delete[] buf;
 	std::cin.clear();
 }
 
 void Menu::LoadFromFile()
 {
 	std::cout << "Write file name to load: ";
-	char* buf = new char[80];
+	std::string buf;
 	std::cin >> buf;
 	ReadFile(buf);
-	delete[] buf;
 	std::cin.clear();
 }

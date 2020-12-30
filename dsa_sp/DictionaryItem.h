@@ -1,33 +1,29 @@
 #include "TranslatedNode.h"
 #include <sstream>
-#include "StrHelpers.h"
 class DictionaryItem
 {
 public:
 	DictionaryItem();
-	DictionaryItem(char*);
+	DictionaryItem(std::string);
 	~DictionaryItem();
 //private:
-	char* key;
+	std::string key;
 	TranslatedNode* words;
-	void AddWord(char* word);
+	void AddWord(std::string word);
 	friend std::ostream& operator<<(std::ostream& os, const DictionaryItem& di);
 
 };
-DictionaryItem::DictionaryItem(char* word) {
+DictionaryItem::DictionaryItem(std::string word) {
 	key = word;
 	words = nullptr;
 	
 }
 
 DictionaryItem::DictionaryItem() {
-	key = nullptr;
 	words = nullptr;
 
 }
 DictionaryItem::~DictionaryItem(){
-	delete[] key;
-	key = nullptr;
 	TranslatedNode* next;
 	while (words != nullptr)
 	{
@@ -38,7 +34,7 @@ DictionaryItem::~DictionaryItem(){
 	}
 
 }
-void DictionaryItem::AddWord(char* word)
+void DictionaryItem::AddWord(std::string word)
 {
 	if(words == nullptr)
 		words = new TranslatedNode(word);

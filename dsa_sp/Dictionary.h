@@ -1,30 +1,29 @@
 #include "DictionaryItem.h"
 #include <iostream>
-#include "StrHelpers.h"
-
-constexpr auto BASESIZE = 1000;
+#include <algorithm>
+constexpr auto BASESIZE = 52;
 
 class Dictionary
 {
 public:
 	Dictionary();
 	~Dictionary();
-	void AddCzechWord(char*);
-	void PrintTranslatedWords(char*);
+	void AddCzechWord(std::string);
+	void PrintTranslatedWords(std::string);
 	void PrintDictionary();
-	void AddTranslation(char*, char*);
-	void RemoveTranslation(char*);
+	void AddTranslation(std::string, std::string);
+	void RemoveTranslation(std::string);
 	void PrintSortedDictionary();
-	bool isKeyInDictionary(char*);
+	bool isWordInDictionary(std::string);
 	friend std::ostream& operator<<(std::ostream& os, const Dictionary& dict);
 	DictionaryItem** dictionary;
 private:
 	int size = BASESIZE;
-	unsigned long Hash(char*);
+	unsigned long Hash(std::string);
 	void Resize();
-	int GetPosition(char*);
+	int GetPosition(std::string);
 	DictionaryItem** GetSortedArray();
-	void QuickSort(DictionaryItem**, int,int);
+	void QuickSort(DictionaryItem**, int, int);
 	int count;
 };
 
@@ -48,53 +47,65 @@ Dictionary::~Dictionary() {
 	dictionary = nullptr;
 }
 
-unsigned long Dictionary::Hash(char* word) {
-
-	for (int i = 0; word[i]!='\0'; i++)
-	{
-		word[i] = tolower(word[i]);
-	}
+unsigned long Dictionary::Hash(std::string word) {
 	return std::hash<std::string>{}(word);
 }
 
-int Dictionary::GetPosition(char* key) {
+int Dictionary::GetPosition(std::string key) {
 	return Hash(key) % size;
 }
 
-void Dictionary::AddCzechWord(char* key) {
+void Dictionary::AddCzechWord(std::string key) {
+	std::transform(key.begin(), key.end(), key.begin(), ::tolower);
 	int position = GetPosition(key);
-	char* czechWord = MakeACopy(key);
-	dictionary[position] = new DictionaryItem(czechWord);
+	if (dictionary[position] != nullptr) 
+		while (dictionary[position] != nullptr)
+			position++;
+
+	dictionary[position] = new DictionaryItem(key);
 	count++;
+
 	if ((double)count / size >= 0.75)
 		Resize();
+
 }
-bool Dictionary::isKeyInDictionary(char* key) {
+bool Dictionary::isWordInDictionary(std::string key) {
+	std::transform(key.begin(), key.end(), key.begin(), ::tolower);
 	int position = GetPosition(key);
+	while (dictionary[position] != nullptr && dictionary[position]->key != key)
+		position++;
 	return dictionary[position] != nullptr;
 }
 
-void Dictionary::PrintTranslatedWords(char* key) {
-	auto words = dictionary[GetPosition(key)];
-	if (words != nullptr) {
+void Dictionary::PrintTranslatedWords(std::string key) {
+	std::transform(key.begin(), key.end(), key.begin(), ::tolower);
+	int position = GetPosition(key);
+	while (dictionary[position]->key != key)
+		position++;
+	
+	if (dictionary[position]->words != nullptr) {
 		std::cout << "--------------------------" << std::endl;
-		std::cout << *words;
+		std::cout << *dictionary[position];
 		std::cout << "--------------------------" << std::endl;
 	}
 	else
 		std::cout << "No translation for word " << key << std::endl;
 }
 
-void Dictionary::AddTranslation(char* key, char* word) {
+void Dictionary::AddTranslation(std::string key, std::string word) {
+	std::transform(key.begin(), key.end(), key.begin(), ::tolower);
+	std::transform(word.begin(), word.end(), word.begin(), ::tolower);
 	int position = GetPosition(key);
-	dictionary[position]->AddWord(MakeACopy(word));	
+	while (dictionary[position]->key != key)
+		position++;
+	dictionary[position]->AddWord(word);
 
 }
 void Dictionary::PrintDictionary() {
 	std::cout << "--------------------------" << std::endl;
 	std::cout << *this << std::endl;
 	std::cout << "--------------------------" << std::endl;
-	std::cout<< "There is " << count << " elements in dictionary" << std::endl;
+	std::cout << "There is " << count << " elements in dictionary" << std::endl;
 	std::cout << "--------------------------" << std::endl;
 };
 
@@ -111,8 +122,12 @@ void Dictionary::PrintSortedDictionary() {
 	std::cout << "--------------------------" << std::endl;
 };
 
-void Dictionary::RemoveTranslation(char* key) {
+void Dictionary::RemoveTranslation(std::string key) {
+	std::transform(key.begin(), key.end(), key.begin(), ::tolower);
 	int position = GetPosition(key);
+	while (dictionary[position]->key != key)
+		position++;
+
 	delete dictionary[position];
 	dictionary[position] = nullptr;
 	count--;
@@ -130,6 +145,10 @@ void Dictionary::Resize() {
 	{
 		if (dictionary[i] != nullptr) {
 			position = GetPosition(dictionary[i]->key);
+			while (newDictionary[position] != nullptr)
+			{
+				position++;
+			}
 			newDictionary[position] = dictionary[i];
 		}
 		else {
@@ -163,7 +182,7 @@ DictionaryItem** Dictionary::GetSortedArray() {
 			arr[k++] = dictionary[i];
 		}
 	}
-	QuickSort(arr, 0, count-1);
+	QuickSort(arr, 0, count - 1);
 	return arr;
 }
 
@@ -177,17 +196,15 @@ void Dictionary::QuickSort(DictionaryItem** items, int left, int right) {
 	j = right;
 	x = items[(left + right) / 2];
 
-	auto swap = [](DictionaryItem** items, int i, int j) {auto temp = items[i]; items[i] = items[j]; items[j] = temp; };
-
 	do {
-		while ((strcmp(items[i]->key, x->key) < 0) && (i < right)) {
+		while (items[i]->key < x->key && i < right) {
 			i++;
 		}
-		while ((strcmp(items[j]->key, x->key) > 0) && (j > left)) {
+		while (items[j]->key > x->key && j > left) {
 			j--;
 		}
 		if (i <= j) {
-			swap(items, i, j);
+			std::swap(items[i], items[j]);
 			i++;
 			j--;
 		}
