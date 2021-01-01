@@ -158,6 +158,8 @@ void Menu::MenuSelection()
 	char c = ' ';
 	while (c != 'q' && c != 'Q')
 	{
+
+		std::cin.clear();
 		system("CLS");
 		std::cout << "1 - Add czech word\n2 - Add translation\n3 - Delete word from dictionary\n4 - Translate word\n5 - Show full dictionary\n6 - Save to file\n7 - Load from file\nQ - Exit\n\n";
 		
