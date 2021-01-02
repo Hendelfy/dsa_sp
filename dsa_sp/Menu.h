@@ -201,7 +201,6 @@ void Menu::SaveToFile()
 	std::string buf;
 	std::cin >> buf;
 	WriteToFile(buf);
-	std::cin.clear();
 }
 
 void Menu::LoadFromFile()
@@ -210,5 +209,4 @@ void Menu::LoadFromFile()
 	std::string buf;
 	std::cin >> buf;
 	ReadFile(buf);
-	std::cin.clear();
 }

@@ -1,7 +1,7 @@
 #include "DictionaryItem.h"
 #include <iostream>
 #include <algorithm>
-constexpr auto BASESIZE = 52;
+constexpr auto BASESIZE = 1000;
 
 class Dictionary
 {
@@ -58,9 +58,11 @@ int Dictionary::GetPosition(std::string key) {
 void Dictionary::AddCzechWord(std::string key) {
 	std::transform(key.begin(), key.end(), key.begin(), ::tolower);
 	int position = GetPosition(key);
-	if (dictionary[position] != nullptr) 
-		while (dictionary[position] != nullptr)
-			position++;
+	while (dictionary[position] != nullptr) {
+		position++;
+		if (position == size)
+			position = 0;
+	}
 
 	dictionary[position] = new DictionaryItem(key);
 	count++;
@@ -72,17 +74,23 @@ void Dictionary::AddCzechWord(std::string key) {
 bool Dictionary::isWordInDictionary(std::string key) {
 	std::transform(key.begin(), key.end(), key.begin(), ::tolower);
 	int position = GetPosition(key);
-	while (dictionary[position] != nullptr && dictionary[position]->key != key)
+	while (dictionary[position] != nullptr && dictionary[position]->key != key) {
 		position++;
+		if (position == size)
+			position = 0;
+	}
 	return dictionary[position] != nullptr;
 }
 
 void Dictionary::PrintTranslatedWords(std::string key) {
 	std::transform(key.begin(), key.end(), key.begin(), ::tolower);
 	int position = GetPosition(key);
-	while (dictionary[position]->key != key)
+	while (dictionary[position]->key != key) {
 		position++;
-	
+		if (position == size)
+			position = 0;
+	}
+
 	if (dictionary[position]->words != nullptr) {
 		std::cout << "--------------------------" << std::endl;
 		std::cout << *dictionary[position];
@@ -96,8 +104,11 @@ void Dictionary::AddTranslation(std::string key, std::string word) {
 	std::transform(key.begin(), key.end(), key.begin(), ::tolower);
 	std::transform(word.begin(), word.end(), word.begin(), ::tolower);
 	int position = GetPosition(key);
-	while (dictionary[position]->key != key)
+	while (dictionary[position]->key != key) {
 		position++;
+		if (position == size)
+			position = 0;
+	}
 	dictionary[position]->AddWord(word);
 
 }
@@ -125,8 +136,11 @@ void Dictionary::PrintSortedDictionary() {
 void Dictionary::RemoveTranslation(std::string key) {
 	std::transform(key.begin(), key.end(), key.begin(), ::tolower);
 	int position = GetPosition(key);
-	while (dictionary[position]->key != key)
+	while (dictionary[position]->key != key) {
 		position++;
+		if (position == size)
+			position = 0;
+	}
 
 	delete dictionary[position];
 	dictionary[position] = nullptr;
@@ -148,6 +162,8 @@ void Dictionary::Resize() {
 			while (newDictionary[position] != nullptr)
 			{
 				position++;
+				if (position == size)
+					position = 0;
 			}
 			newDictionary[position] = dictionary[i];
 		}
@@ -187,7 +203,8 @@ DictionaryItem** Dictionary::GetSortedArray() {
 }
 
 void Dictionary::QuickSort(DictionaryItem** items, int left, int right) {
-
+	if (left >= right)
+		return;
 	int i, j;
 	DictionaryItem* x;
 

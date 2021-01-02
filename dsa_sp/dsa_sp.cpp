@@ -1,10 +1,10 @@
 #include <crtdbg.h>
 #include "Menu.h"
-int main(int argv, char* argc[])
+int main(int argc, char* argv[])
 {
 	auto menu = new Menu();
-	if (argv == 2) {
-		menu->ReadFile(argc[1]);
+	if (argc == 2) {//Load data from text file, which one defined by arguments
+		menu->ReadFile(argv[1]);
 		system("pause");
 	}
 	menu->MenuSelection();
